@@ -1,42 +1,68 @@
 ﻿using Application.Interfaces;
+using Domain.Entities;
 using MediatR;
 
 namespace Application.Apartments.Commands;
 
 public class UpdateApartmentCommand : IRequest<bool>
 {
-    public int Id { get; set; }
-    public string Code { get; set; } = default!;
+    public Guid Id { get; set; }
+    public string Title { get; set; } = default!;
     public string Address { get; set; } = default!;
-    public int Floor { get; set; }
-    public double Area { get; set; }
     public decimal Price { get; set; }
+    public double Area { get; set; }
+    public int Bedrooms { get; set; }
+    public int Bathrooms { get; set; }
+    public string? Description { get; set; }
+    public string? Amenities { get; set; }
+    public DateTime AvailableFrom { get; set; } = DateTime.Now.AddDays(1);
+    public List<string> Base64Images { get; set; }
+
+    public string? Code { get; set; }
+    public int Floor { get; set; }
 
     public UpdateApartmentCommand() { }
 
     public class UpdateApartmentHandler : IRequestHandler<UpdateApartmentCommand, bool>
     {
-        private readonly IApartmentRepository _repo;
+        private readonly IApartmentRepository _aptRepo;
+        private readonly IApartmentImageRepository _aptImageRepo;
 
-        public UpdateApartmentHandler(IApartmentRepository repo)
+        public UpdateApartmentHandler(IApartmentRepository aptRepo, IApartmentImageRepository aptImageRepo)
         {
-            _repo = repo;
+            _aptRepo = aptRepo;
+            _aptImageRepo = aptImageRepo;
         }
 
         public async Task<bool> Handle(UpdateApartmentCommand request, CancellationToken cancellationToken)
         {
-            var apt = await _repo.GetByIdAsync(request.Id);
-
+            var apt = await _aptRepo.GetByIdAsync(request.Id);
             if (apt == null)
-                return false;
+                throw new KeyNotFoundException("Apartment not found");
 
-            apt.Code = request.Code;
+            apt.Title = request.Title;
             apt.Address = request.Address;
-            apt.Floor = request.Floor;
-            apt.Area = request.Area;
             apt.Price = request.Price;
+            apt.Area = request.Area;
+            apt.Floor = request.Floor;
+            apt.Bedrooms = request.Bedrooms;
+            apt.Bathrooms = request.Bathrooms;
+            apt.Description = request.Description;
+            apt.Amenities = request.Amenities;
+            apt.AvailableFrom = request.AvailableFrom;
+            apt.Code = "";
 
-            await _repo.UpdateAsync(apt);
+            // Remove old images
+            if (apt.ApartmentImages.Any())
+            {
+                await _aptImageRepo.RemoveRangeAsync(apt.ApartmentImages);
+            }
+
+            // Add new images
+            await _aptImageRepo.AddRangeAsync(ApartmentImages.FromBase64List(request.Id, request.Base64Images));
+
+            // Update apt
+            await _aptRepo.UpdateAsync(apt);
 
             return true;
         }

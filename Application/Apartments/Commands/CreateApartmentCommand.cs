@@ -5,17 +5,26 @@ using MediatR;
 
 namespace Application.Apartments.Commands;
 
-public class CreateApartmentCommand : IRequest<int>
+public class CreateApartmentCommand : IRequest<Guid>
 {
-    public string Code { get; set; } = default!;
+    public string Title { get; set; } = default!;
     public string Address { get; set; } = default!;
-    public int Floor { get; set; }
-    public double Area { get; set; }
     public decimal Price { get; set; }
+    public double Area { get; set; }
+    public int Bedrooms { get; set; }
+    public int Bathrooms { get; set; }
+    public string? Description { get; set; }
+    public string? Amenities { get; set; }
+    public DateTime AvailableFrom { get; set; } = DateTime.Now.AddDays(1);
+    public List<string> Base64Images { get; set; }
+
+    public string? Code { get; set; }
+    public int Floor { get; set; }
+
 
     public CreateApartmentCommand() { }
 
-    public class CreateApartmentHandler : IRequestHandler<CreateApartmentCommand, int>
+    public class CreateApartmentHandler : IRequestHandler<CreateApartmentCommand, Guid>
     {
         private readonly IApartmentRepository _repo;
 
@@ -24,15 +33,25 @@ public class CreateApartmentCommand : IRequest<int>
             _repo = repo;
         }
 
-        public async Task<int> Handle(CreateApartmentCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CreateApartmentCommand request, CancellationToken cancellationToken)
         {
+            var newApartmentId = Guid.NewGuid();
             var apt = new Apartment
             {
-                Code = request.Code,
+                Id = newApartmentId,
+                Title = request.Title,
                 Address = request.Address,
-                Floor = request.Floor,
+                Price = request.Price,
                 Area = request.Area,
-                Price = request.Price
+                Floor = request.Floor,
+                Bedrooms = request.Bedrooms,
+                Bathrooms = request.Bathrooms,
+                Description = request.Description,
+                Amenities = request.Amenities,
+                AvailableFrom = request.AvailableFrom,
+                ApartmentImages = ApartmentImages.FromBase64List(newApartmentId, request.Base64Images),
+
+                Code = request.Code,
             };
 
             return await _repo.AddAsync(apt);

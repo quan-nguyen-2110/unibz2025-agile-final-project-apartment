@@ -4,9 +4,11 @@ namespace Application.Interfaces;
 
 public interface IApartmentRepository
 {
-    Task<Apartment?> GetByIdAsync(int id);
+    Task<Apartment?> GetByIdAsync(Guid id);
     Task<List<Apartment>> GetAllAsync();
-    Task<int> AddAsync(Apartment apt);
+    Task<Guid> AddAsync(Apartment apt);
     Task UpdateAsync(Apartment apt);
-    Task DeleteAsync(int id);
+    Task DeleteAsync(Guid id);
+
+    
 }

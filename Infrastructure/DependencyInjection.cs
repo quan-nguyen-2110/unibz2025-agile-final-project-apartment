@@ -15,6 +15,7 @@ public static class DependencyInjection
             options.UseSqlServer(config.GetConnectionString("Default")));
 
         services.AddScoped<IApartmentRepository, ApartmentRepository>();
+        services.AddScoped<IApartmentImageRepository, ApartmentImageRepository>();
 
         return services;
     }

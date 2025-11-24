@@ -1,30 +1,51 @@
-﻿using Application.Interfaces;
+﻿using Application.Apartments.Queries.DTOs;
+using Application.Interfaces;
 using Domain.Entities;
 using MediatR;
 
 namespace Application.Apartments.Queries;
 
-public class GetApartmentByIdQuery : IRequest<Apartment?>
+public class GetApartmentByIdQuery : IRequest<ApartmentDto?>
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    public GetApartmentByIdQuery(int id)
+    public GetApartmentByIdQuery(Guid id)
     {
         Id = id;
     }
 
-    public class GetApartmentByIdHandler : IRequestHandler<GetApartmentByIdQuery, Apartment?>
+    public class GetApartmentByIdHandler : IRequestHandler<GetApartmentByIdQuery, ApartmentDto?>
     {
-        private readonly IApartmentRepository _repo;
+        private readonly IApartmentRepository _aptRepo;
+        private readonly IApartmentImageRepository _aptImageRepo;
 
-        public GetApartmentByIdHandler(IApartmentRepository repo)
+        public GetApartmentByIdHandler(IApartmentRepository repo, IApartmentImageRepository aptImgRepo)
         {
-            _repo = repo;
+            _aptRepo = repo;
+            _aptImageRepo = aptImgRepo;
         }
 
-        public Task<Apartment?> Handle(GetApartmentByIdQuery request, CancellationToken cancellationToken)
+        public async Task<ApartmentDto?> Handle(GetApartmentByIdQuery request, CancellationToken cancellationToken)
         {
-            return _repo.GetByIdAsync(request.Id);
+            await Task.Delay(5_000);
+            var apart = await _aptRepo.GetByIdAsync(request.Id);
+            return apart != null ? new ApartmentDto()
+            {
+                Id = apart.Id,
+                Title = apart.Title,
+                Address = apart.Address,
+                Price = apart.Price,
+                Area = apart.Area,
+                Floor = apart.Floor,
+                Bedrooms = apart.Bedrooms,
+                Bathrooms = apart.Bathrooms,
+                Description = apart.Description,
+                Amenities = apart.Amenities.Split(',').ToList(),
+                AvailableFrom = apart.AvailableFrom,
+                Base64Images = await _aptImageRepo.GetBase64ImagesByApartmentIdAsync(apart.Id),
+
+                Code = apart.Code,
+            } : null;
         }
     }
 }

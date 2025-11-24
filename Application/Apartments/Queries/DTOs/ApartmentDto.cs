@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Application.Apartments.Queries.DTOs
 {
-    public class Apartment
+    public class ApartmentDto
     {
-        [Key]
         public Guid Id { get; set; }
         public string Code { get; set; } = default!;
         public string Address { get; set; } = default!;
@@ -20,11 +18,14 @@ namespace Domain.Entities
         public string Title { get; set; } = default!;
         public int Bedrooms { get; set; }
         public int Bathrooms { get; set; }
-        public string? Description { get; set; }
+        public string Description { get; set; } = default!;
+        public List<string> Base64Images { get; set; } = new List<string>();
 
         public DateTime AvailableFrom { get; set; }
-        public string? Amenities { get; set; }
 
-        public virtual List<ApartmentImages> ApartmentImages { get; set; } = new List<ApartmentImages>();
+        /// <summary>
+        /// In FE, It should be displayed as a list of tags or badges.
+        /// </summary>
+        public List<string> Amenities { get; set; } = new List<string>();
     }
 }

@@ -12,14 +12,14 @@ public class ApartmentRepository : IApartmentRepository
     public ApartmentRepository(AppDbContext db)
         => _db = db;
 
-    public async Task<int> AddAsync(Apartment apt)
+    public async Task<Guid> AddAsync(Apartment apt)
     {
         _db.Apartments.Add(apt);
         await _db.SaveChangesAsync();
         return apt.Id;
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(Guid id)
     {
         var apt = await _db.Apartments.FindAsync(id);
         if (apt != null)
@@ -32,8 +32,10 @@ public class ApartmentRepository : IApartmentRepository
     public Task<List<Apartment>> GetAllAsync()
         => _db.Apartments.ToListAsync();
 
-    public Task<Apartment?> GetByIdAsync(int id)
-        => _db.Apartments.FirstOrDefaultAsync(x => x.Id == id);
+    public Task<Apartment?> GetByIdAsync(Guid id)
+        => _db.Apartments
+        .Include(x => x.ApartmentImages)
+        .FirstOrDefaultAsync(x => x.Id == id);
 
     public async Task UpdateAsync(Apartment apt)
     {

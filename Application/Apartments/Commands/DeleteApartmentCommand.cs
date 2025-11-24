@@ -5,9 +5,9 @@ namespace Application.Apartments.Commands;
 
 public class DeleteApartmentCommand : IRequest<bool>
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    public DeleteApartmentCommand(int id)
+    public DeleteApartmentCommand(Guid id)
     {
         Id = id;
     }
