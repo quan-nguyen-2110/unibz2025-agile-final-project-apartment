@@ -22,7 +22,7 @@ namespace Domain.Entities
         public int Bathrooms { get; set; }
         public string? Description { get; set; }
 
-        public DateTime AvailableFrom { get; set; }
+        public DateTime? AvailableFrom { get; set; }
         public string? Amenities { get; set; }
 
         public virtual List<ApartmentImages> ApartmentImages { get; set; } = new List<ApartmentImages>();

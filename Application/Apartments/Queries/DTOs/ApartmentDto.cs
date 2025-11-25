@@ -18,14 +18,10 @@ namespace Application.Apartments.Queries.DTOs
         public string Title { get; set; } = default!;
         public int Bedrooms { get; set; }
         public int Bathrooms { get; set; }
-        public string Description { get; set; } = default!;
+        public string? Description { get; set; }
         public List<string> Base64Images { get; set; } = new List<string>();
 
-        public DateTime AvailableFrom { get; set; }
-
-        /// <summary>
-        /// In FE, It should be displayed as a list of tags or badges.
-        /// </summary>
-        public List<string> Amenities { get; set; } = new List<string>();
+        public DateTime? AvailableFrom { get; set; }
+        public string? Amenities { get; set; }
     }
 }

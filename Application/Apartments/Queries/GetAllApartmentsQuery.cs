@@ -23,24 +23,25 @@ namespace Application.Apartments.Queries
             {
                 List<ApartmentDto> result = new List<ApartmentDto>();
                 var apartments = await _aptRepo.GetAllAsync();
-                foreach(var apt in apartments)
+                foreach (var apt in apartments)
                 {
                     ApartmentDto dto = new ApartmentDto
                     {
                         Id = apt.Id,
-                        Code = apt.Code,
-                        Address = apt.Address,
+                        Title = apt.Title.Trim(),
+                        Address = apt.Address.Trim(),
                         Floor = apt.Floor,
                         Area = apt.Area,
                         Price = apt.Price,
-                        Title = apt.Title,
                         Bedrooms = apt.Bedrooms,
                         Bathrooms = apt.Bathrooms,
-                        Description = apt.Description,
+                        Description = apt.Description?.Trim(),
                         AvailableFrom = apt.AvailableFrom,
-                        Amenities = apt.Amenities.Split(',').ToList(),
+                        Amenities = apt.Amenities?.Trim(),
 
-                        Base64Images = await _aptImageRepo.GetBase64ImagesByApartmentIdAsync(apt.Id)
+                        Base64Images = await _aptImageRepo.GetBase64ImagesByApartmentIdAsync(apt.Id),
+
+                        Code = apt.Code,
                     };
 
                     result.Add(dto);

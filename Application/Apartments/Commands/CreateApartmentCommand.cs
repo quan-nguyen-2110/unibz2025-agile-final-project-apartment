@@ -15,7 +15,7 @@ public class CreateApartmentCommand : IRequest<Guid>
     public int Bathrooms { get; set; }
     public string? Description { get; set; }
     public string? Amenities { get; set; }
-    public DateTime AvailableFrom { get; set; } = DateTime.Now.AddDays(1);
+    public DateTime? AvailableFrom { get; set; }
     public List<string> Base64Images { get; set; }
 
     public string? Code { get; set; }
@@ -39,15 +39,15 @@ public class CreateApartmentCommand : IRequest<Guid>
             var apt = new Apartment
             {
                 Id = newApartmentId,
-                Title = request.Title,
-                Address = request.Address,
+                Title = request.Title.Trim(),
+                Address = request.Address.Trim(),
                 Price = request.Price,
                 Area = request.Area,
                 Floor = request.Floor,
                 Bedrooms = request.Bedrooms,
                 Bathrooms = request.Bathrooms,
-                Description = request.Description,
-                Amenities = request.Amenities,
+                Description = request.Description?.Trim(),
+                Amenities = request.Amenities?.Trim(),
                 AvailableFrom = request.AvailableFrom,
                 ApartmentImages = ApartmentImages.FromBase64List(newApartmentId, request.Base64Images),
 

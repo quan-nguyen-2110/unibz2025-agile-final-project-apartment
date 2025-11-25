@@ -40,7 +40,7 @@ public class GetApartmentByIdQuery : IRequest<ApartmentDto?>
                 Bedrooms = apart.Bedrooms,
                 Bathrooms = apart.Bathrooms,
                 Description = apart.Description,
-                Amenities = apart.Amenities.Split(',').ToList(),
+                Amenities = apart.Amenities,
                 AvailableFrom = apart.AvailableFrom,
                 Base64Images = await _aptImageRepo.GetBase64ImagesByApartmentIdAsync(apart.Id),
 

@@ -15,7 +15,7 @@ public class UpdateApartmentCommand : IRequest<bool>
     public int Bathrooms { get; set; }
     public string? Description { get; set; }
     public string? Amenities { get; set; }
-    public DateTime AvailableFrom { get; set; } = DateTime.Now.AddDays(1);
+    public DateTime? AvailableFrom { get; set; }
     public List<string> Base64Images { get; set; }
 
     public string? Code { get; set; }
@@ -40,15 +40,15 @@ public class UpdateApartmentCommand : IRequest<bool>
             if (apt == null)
                 throw new KeyNotFoundException("Apartment not found");
 
-            apt.Title = request.Title;
-            apt.Address = request.Address;
+            apt.Title = request.Title.Trim();
+            apt.Address = request.Address.Trim();
             apt.Price = request.Price;
             apt.Area = request.Area;
             apt.Floor = request.Floor;
             apt.Bedrooms = request.Bedrooms;
             apt.Bathrooms = request.Bathrooms;
-            apt.Description = request.Description;
-            apt.Amenities = request.Amenities;
+            apt.Description = request.Description?.Trim();
+            apt.Amenities = request.Amenities?.Trim();
             apt.AvailableFrom = request.AvailableFrom;
             apt.Code = "";
 
