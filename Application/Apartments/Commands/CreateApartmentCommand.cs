@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.Interfaces.IMessaging;
+using Application.Interfaces.IRepository;
 using Domain.Entities;
 using FluentValidation;
 using MediatR;
@@ -27,6 +28,7 @@ public class CreateApartmentCommand : IRequest<Guid>
     public class CreateApartmentHandler : IRequestHandler<CreateApartmentCommand, Guid>
     {
         private readonly IApartmentRepository _repo;
+        //private readonly IMessagePublisher _publisher;
 
         public CreateApartmentHandler(IApartmentRepository repo)
         {
@@ -54,7 +56,11 @@ public class CreateApartmentCommand : IRequest<Guid>
                 Code = request.Code,
             };
 
-            return await _repo.AddAsync(apt);
+            await _repo.AddAsync(apt);
+
+            
+
+            return apt.Id;
         }
     }
 }

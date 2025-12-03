@@ -1,5 +1,5 @@
 ﻿using Application.Apartments.Queries.DTOs;
-using Application.Interfaces;
+using Application.Interfaces.IRepository;
 using Domain.Entities;
 using MediatR;
 

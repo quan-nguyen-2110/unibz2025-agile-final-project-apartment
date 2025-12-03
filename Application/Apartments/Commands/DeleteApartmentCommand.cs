@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;
+﻿using Application.Interfaces.IRepository;
 using MediatR;
 
 namespace Application.Apartments.Commands;

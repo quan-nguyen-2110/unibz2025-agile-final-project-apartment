@@ -1,5 +1,6 @@
 ﻿using Application.Apartments.Queries.DTOs;
-using Application.Interfaces;
+using Application.Interfaces.IMessaging;
+using Application.Interfaces.IRepository;
 using Domain.Entities;
 using MediatR;
 
@@ -12,11 +13,13 @@ namespace Application.Apartments.Queries
         {
             private readonly IApartmentRepository _aptRepo;
             private readonly IApartmentImageRepository _aptImageRepo;
+            private readonly IMessagePublisher _publisher;
 
-            public GetAllApartmentsHandler(IApartmentRepository repo, IApartmentImageRepository aptImgRepo)
+            public GetAllApartmentsHandler(IApartmentRepository repo, IApartmentImageRepository aptImgRepo, IMessagePublisher publisher)
             {
                 _aptRepo = repo;
                 _aptImageRepo = aptImgRepo;
+                _publisher = publisher;
             }
 
             public async Task<List<ApartmentDto>> Handle(GetAllApartmentsQuery request, CancellationToken cancellationToken)
@@ -45,6 +48,15 @@ namespace Application.Apartments.Queries
                     };
 
                     result.Add(dto);
+                }
+
+                try
+                {
+                    await _publisher.PublishAsync("chau len ba", "chau di mau giao");
+                }
+                catch (Exception ex)
+                {
+                    var msg = ex.Message;
                 }
 
                 return result;

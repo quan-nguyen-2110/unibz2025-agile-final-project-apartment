@@ -1,4 +1,6 @@
-﻿using Application.Interfaces;
+﻿using Application.Interfaces.IMessaging;
+using Application.Interfaces.IRepository;
+using Infrastructure.Messaging;
 using Infrastructure.Persistence;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +18,10 @@ public static class DependencyInjection
 
         services.AddScoped<IApartmentRepository, ApartmentRepository>();
         services.AddScoped<IApartmentImageRepository, ApartmentImageRepository>();
+
+        //services.Configure<RabbitMqOptions>(config.GetSection("RabbitMQ"));
+        services.AddSingleton<IMessagePublisher, RabbitMqPublisher>();
+        //services.AddHostedService<RabbitMqConsumer>();
 
         return services;
     }
