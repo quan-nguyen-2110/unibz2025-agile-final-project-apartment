@@ -27,7 +27,6 @@ public class GetApartmentByIdQuery : IRequest<ApartmentDto?>
 
         public async Task<ApartmentDto?> Handle(GetApartmentByIdQuery request, CancellationToken cancellationToken)
         {
-            await Task.Delay(5_000);
             var apart = await _aptRepo.GetByIdAsync(request.Id);
             return apart != null ? new ApartmentDto()
             {

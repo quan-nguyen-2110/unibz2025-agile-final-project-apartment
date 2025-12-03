@@ -10,11 +10,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 // Register MediatR handlers
-builder.Services.AddMediatR(cfg =>
-{
-    // Provide the assembly that contains your handlers
-    cfg.RegisterServicesFromAssembly(typeof(GetAllApartmentsQuery).Assembly);
-});
+//builder.Services.AddMediatR(cfg =>
+//{
+//    // Provide the assembly that contains your handlers
+//    cfg.RegisterServicesFromAssembly(typeof(GetAllApartmentsQuery).Assembly);
+//});
+
+Application.DependencyInjection.AddApplication(builder.Services);
 
 // Infrastructure
 builder.Services.AddInfrastructure(builder.Configuration);
