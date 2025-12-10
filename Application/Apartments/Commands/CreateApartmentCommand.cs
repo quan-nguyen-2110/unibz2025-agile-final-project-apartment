@@ -3,6 +3,8 @@ using Application.Interfaces.IRepository;
 using Domain.Entities;
 using FluentValidation;
 using MediatR;
+using Microsoft.Extensions.Configuration;
+using System.Text.Json;
 
 namespace Application.Apartments.Commands;
 
@@ -28,11 +30,14 @@ public class CreateApartmentCommand : IRequest<Guid>
     public class CreateApartmentHandler : IRequestHandler<CreateApartmentCommand, Guid>
     {
         private readonly IApartmentRepository _repo;
-        //private readonly IMessagePublisher _publisher;
+        private readonly IMessagePublisher _publisher;
+        private readonly IConfiguration _config;
 
-        public CreateApartmentHandler(IApartmentRepository repo)
+        public CreateApartmentHandler(IApartmentRepository repo, IMessagePublisher publisher, IConfiguration config)
         {
             _repo = repo;
+            _publisher = publisher;
+            _config = config;
         }
 
         public async Task<Guid> Handle(CreateApartmentCommand request, CancellationToken cancellationToken)
@@ -58,7 +63,25 @@ public class CreateApartmentCommand : IRequest<Guid>
 
             await _repo.AddAsync(apt);
 
-            
+            try
+            {
+                await _publisher.PublishAsync(
+                    JsonSerializer.Serialize(new
+                    {
+                        Id = apt.Id,
+                        Title = apt.Title,
+                        Address = apt.Address,
+                        Price = apt.Price,
+                        Description = apt.Description,
+                        Base64Image = apt.ApartmentImages.FirstOrDefault()?.Base64Image
+                    }),
+                    _config["RabbitMQ:RK.CreateApartment"] ?? "rk-create-apt");
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (logging mechanism not shown here)
+                Console.WriteLine($"Failed to publish message: {ex.Message}");
+            }
 
             return apt.Id;
         }

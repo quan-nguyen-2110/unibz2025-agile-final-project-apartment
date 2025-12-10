@@ -1,6 +1,9 @@
-﻿using Application.Interfaces.IRepository;
+﻿using Application.Interfaces.IMessaging;
+using Application.Interfaces.IRepository;
 using Domain.Entities;
 using MediatR;
+using Microsoft.Extensions.Configuration;
+using System.Text.Json;
 
 namespace Application.Apartments.Commands;
 
@@ -27,11 +30,19 @@ public class UpdateApartmentCommand : IRequest<bool>
     {
         private readonly IApartmentRepository _aptRepo;
         private readonly IApartmentImageRepository _aptImageRepo;
+        private readonly IMessagePublisher _publisher;
+        private readonly IConfiguration _config;
 
-        public UpdateApartmentHandler(IApartmentRepository aptRepo, IApartmentImageRepository aptImageRepo)
+        public UpdateApartmentHandler(
+            IApartmentRepository aptRepo,
+            IApartmentImageRepository aptImageRepo,
+            IMessagePublisher publisher,
+            IConfiguration config)
         {
             _aptRepo = aptRepo;
             _aptImageRepo = aptImageRepo;
+            _publisher = publisher;
+            _config = config;
         }
 
         public async Task<bool> Handle(UpdateApartmentCommand request, CancellationToken cancellationToken)
@@ -63,6 +74,26 @@ public class UpdateApartmentCommand : IRequest<bool>
 
             // Update apt
             await _aptRepo.UpdateAsync(apt);
+
+            try
+            {
+                await _publisher.PublishAsync(
+                    JsonSerializer.Serialize(new
+                    {
+                        Id = apt.Id,
+                        Title = apt.Title,
+                        Address = apt.Address,
+                        Price = apt.Price,
+                        Description = apt.Description,
+                        Base64Image = request.Base64Images.FirstOrDefault()
+                    }),
+                    _config["RabbitMQ:RK.UpdateApartment"] ?? "rk-update-apt");
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (logging mechanism not shown here)
+                Console.WriteLine($"Failed to publish message: {ex.Message}");
+            }
 
             return true;
         }

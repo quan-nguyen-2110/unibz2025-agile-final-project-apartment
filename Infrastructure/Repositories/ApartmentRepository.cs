@@ -30,7 +30,7 @@ public class ApartmentRepository : IApartmentRepository
     }
 
     public Task<List<Apartment>> GetAllAsync()
-        => _db.Apartments.ToListAsync();
+        => _db.Apartments.Include(x => x.ApartmentImages).ToListAsync();
 
     public Task<Apartment?> GetByIdAsync(Guid id)
         => _db.Apartments

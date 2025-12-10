@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Messaging
 {
-    internal class RabbitMqConsumer
+    public class RabbitMqConsumer
     {
     }
 }

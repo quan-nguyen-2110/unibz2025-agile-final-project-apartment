@@ -1,11 +1,7 @@
 ﻿using Application.Interfaces.IMessaging;
 using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Messaging
 {
@@ -15,16 +11,17 @@ namespace Infrastructure.Messaging
         private readonly string _username;
         private readonly string _password;
         private readonly string _exchangeName;
-        private readonly string _aptRountingKey;
+        //private readonly string _RKCreatedApt;
         public RabbitMqPublisher(IConfiguration config)
         {
             _host = config["RabbitMQ:Host"] ?? "localhost";
             _username = config["RabbitMQ:User"] ?? "guest";
             _password = config["RabbitMQ:Pass"] ?? "guest";
             _exchangeName = config["RabbitMQ:ExchangeName"] ?? "rent-hub";
-            _aptRountingKey = config["RabbitMQ:AptRountingKey"] ?? "apt-rounting-key";
+            //_RKCreatedApt = config["RabbitMQ:RK.CreateApartment"] ?? "apt-rounting-key";
         }
-        public async Task PublishAsync(string message, string queue)
+
+        public async Task PublishAsync(string message, string routingKey)
         {
             var factory = new ConnectionFactory()
             {
@@ -37,7 +34,7 @@ namespace Infrastructure.Messaging
             using var channel = await connection.CreateChannelAsync();
 
             // Declare exchange if not exists
-            await channel.ExchangeDeclareAsync(exchange: _exchangeName, type: ExchangeType.Fanout);
+            await channel.ExchangeDeclareAsync(exchange: _exchangeName, type: ExchangeType.Direct);
 
             var body = Encoding.UTF8.GetBytes(message);
 
@@ -48,7 +45,7 @@ namespace Infrastructure.Messaging
 
             This is true for all exchange types (direct, topic, fanout, headers).*/
             //
-            await channel.BasicPublishAsync(exchange: _exchangeName, routingKey: _aptRountingKey, body: body);
+            await channel.BasicPublishAsync(exchange: _exchangeName, routingKey: routingKey, body: body);
             Console.WriteLine($" [x] Sent {message}");
 
             await Task.CompletedTask;

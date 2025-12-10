@@ -8,6 +8,6 @@ namespace Application.Interfaces.IMessaging
 {
     public interface IMessagePublisher
     {
-        Task PublishAsync(string message, string queue);
+        Task PublishAsync(string message, string routingKey);
     }
 }

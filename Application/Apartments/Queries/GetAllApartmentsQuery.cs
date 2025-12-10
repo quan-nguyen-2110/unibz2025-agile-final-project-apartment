@@ -12,14 +12,10 @@ namespace Application.Apartments.Queries
         public class GetAllApartmentsHandler : IRequestHandler<GetAllApartmentsQuery, List<ApartmentDto>>
         {
             private readonly IApartmentRepository _aptRepo;
-            private readonly IApartmentImageRepository _aptImageRepo;
-            private readonly IMessagePublisher _publisher;
 
-            public GetAllApartmentsHandler(IApartmentRepository repo, IApartmentImageRepository aptImgRepo, IMessagePublisher publisher)
+            public GetAllApartmentsHandler(IApartmentRepository repo)
             {
                 _aptRepo = repo;
-                _aptImageRepo = aptImgRepo;
-                _publisher = publisher;
             }
 
             public async Task<List<ApartmentDto>> Handle(GetAllApartmentsQuery request, CancellationToken cancellationToken)
@@ -42,21 +38,12 @@ namespace Application.Apartments.Queries
                         AvailableFrom = apt.AvailableFrom,
                         Amenities = apt.Amenities?.Trim(),
 
-                        Base64Images = await _aptImageRepo.GetBase64ImagesByApartmentIdAsync(apt.Id),
+                        Base64Images = apt.ApartmentImages.Select(x => x.Base64Image).ToList(),
 
                         Code = apt.Code,
                     };
 
                     result.Add(dto);
-                }
-
-                try
-                {
-                    await _publisher.PublishAsync("chau len ba", "chau di mau giao");
-                }
-                catch (Exception ex)
-                {
-                    var msg = ex.Message;
                 }
 
                 return result;
