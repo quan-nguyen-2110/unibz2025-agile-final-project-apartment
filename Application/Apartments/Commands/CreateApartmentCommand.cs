@@ -75,7 +75,7 @@ public class CreateApartmentCommand : IRequest<Guid>
                         Description = apt.Description,
                         Base64Image = apt.ApartmentImages.FirstOrDefault()?.Base64Image
                     }),
-                    _config["RabbitMQ:RK.CreateApartment"] ?? "rk-create-apt");
+                    _config["RabbitMQ:RK:CreateApartment"] ?? "rk-create-apt");
             }
             catch (Exception ex)
             {

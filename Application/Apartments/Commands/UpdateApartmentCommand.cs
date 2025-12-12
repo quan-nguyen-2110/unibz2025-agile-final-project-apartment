@@ -87,7 +87,7 @@ public class UpdateApartmentCommand : IRequest<bool>
                         Description = apt.Description,
                         Base64Image = request.Base64Images.FirstOrDefault()
                     }),
-                    _config["RabbitMQ:RK.UpdateApartment"] ?? "rk-update-apt");
+                    _config["RabbitMQ:RK:UpdateApartment"] ?? "rk-update-apt");
             }
             catch (Exception ex)
             {
