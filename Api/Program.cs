@@ -50,11 +50,12 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 Console.WriteLine($"Environment: {app.Environment.EnvironmentName}");
+app.UseSwagger();
+app.UseSwaggerUI();
+app.UseDeveloperExceptionPage();
+
 if (!app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.UseDeveloperExceptionPage();
     // Database.Migrate() will apply all pending migrations automatically when the app starts.
     // For development / staging environments only!
     // For production: prefer CI/CD migration step to have control and avoid accidental data loss.
