@@ -2,12 +2,27 @@ using Application.Apartments.Queries;
 using Infrastructure;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    // Convert enums to strings in JSON request/response bodies
+    options.JsonSerializerOptions.Converters.Add(
+        new JsonStringEnumConverter(
+            namingPolicy: null,
+            allowIntegerValues: false
+        )
+    );
+
+    // Make enum parsing case-insensitive
+    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+}); ;
+
+
 
 // Register MediatR handlers
 //builder.Services.AddMediatR(cfg =>
