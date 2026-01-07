@@ -1,6 +1,6 @@
 ﻿using Application.Apartments.Queries.DTOs;
 using Application.Interfaces.IMessaging;
-using Application.Interfaces.IRepository;
+using Domain.Interfaces.IRepository;
 using Domain.Entities;
 using MediatR;
 

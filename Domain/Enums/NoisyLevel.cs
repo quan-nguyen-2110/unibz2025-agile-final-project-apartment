@@ -9,7 +9,7 @@ namespace Domain.Enums
 {
     public enum NoisyLevel
     {
-        Quite,
+        Quiet,
         Moderate,
         Noisy,
     }

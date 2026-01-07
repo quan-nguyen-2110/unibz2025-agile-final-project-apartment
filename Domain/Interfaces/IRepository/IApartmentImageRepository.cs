@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Interfaces.IRepository
+namespace Domain.Interfaces.IRepository
 {
     public interface IApartmentImageRepository
     {

@@ -1,5 +1,5 @@
 ﻿using Application.Interfaces.IMessaging;
-using Application.Interfaces.IRepository;
+using Domain.Interfaces.IRepository;
 using Domain.Entities;
 using Domain.Enums;
 using MediatR;
