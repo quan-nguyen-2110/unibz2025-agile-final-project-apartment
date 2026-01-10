@@ -1,10 +1,10 @@
-﻿using Application.Interfaces.IMessaging;
-using Domain.Interfaces.IRepository;
+﻿using Domain.Interfaces.IRepository;
 using Domain.Entities;
 using Domain.Enums;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
+using Application.Common.Interfaces.IMessaging;
 
 namespace Application.Apartments.Commands;
 

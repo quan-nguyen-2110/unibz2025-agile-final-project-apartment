@@ -1,7 +1,5 @@
 ﻿using Application.Apartments.Queries.DTOs;
-using Application.Interfaces.IMessaging;
 using Domain.Interfaces.IRepository;
-using Domain.Entities;
 using MediatR;
 
 namespace Application.Apartments.Queries

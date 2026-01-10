@@ -25,6 +25,15 @@ public class ApartmentController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> GetAll()
         => Ok(await mediator.Send(new GetAllApartmentsQuery()));
 
+    /// <summary>
+    /// Get a list of all apartments for synchronization.
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("synchronized")]
+    public async Task<IActionResult> GetSynchronizedAll()
+        => Ok(await mediator.Send(new GetAllApartmentsForSynchronizationQuery()));
+
     /// TO-DO: Filter API
     ///
 

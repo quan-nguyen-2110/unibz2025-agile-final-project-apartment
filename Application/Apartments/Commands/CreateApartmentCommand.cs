@@ -1,8 +1,7 @@
-﻿using Application.Interfaces.IMessaging;
-using Domain.Interfaces.IRepository;
+﻿using Application.Common.Interfaces.IMessaging;
 using Domain.Entities;
 using Domain.Enums;
-using FluentValidation;
+using Domain.Interfaces.IRepository;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
