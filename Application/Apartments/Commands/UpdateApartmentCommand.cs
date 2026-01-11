@@ -88,7 +88,11 @@ public class UpdateApartmentCommand : IRequest<bool>
                         Address = apt.Address,
                         Price = apt.Price,
                         Description = apt.Description,
-                        Base64Image = request.Base64Images.FirstOrDefault()
+                        Base64Image = request.Base64Images.FirstOrDefault(),
+                        NoiseLevel = apt.Noisy.ToString(),
+                        AvailableFrom = apt.AvailableFrom,
+                        Bedrooms = apt.Bedrooms,
+                        Bathrooms = apt.Bathrooms,
                     }),
                     _config["RabbitMQ:RK:UpdateApartment"] ?? "rk-update-apt");
             }

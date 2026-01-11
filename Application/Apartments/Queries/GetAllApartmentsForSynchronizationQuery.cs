@@ -29,7 +29,11 @@ namespace Application.Apartments.Queries
                         Address = apt.Address.Trim(),
                         Price = apt.Price,
                         Description = apt.Description?.Trim(),
-                        Base64Image = apt.ApartmentImages.FirstOrDefault()?.Base64Image
+                        Base64Image = apt.ApartmentImages.FirstOrDefault()?.Base64Image,
+                        NoiseLevel = apt.Noisy.ToString(),
+                        AvailableFrom = apt.AvailableFrom,
+                        Bedrooms = apt.Bedrooms,
+                        Bathrooms = apt.Bathrooms,
                     };
 
                     result.Add(obj);
